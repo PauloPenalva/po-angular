@@ -35,16 +35,15 @@ export class PoMultiselectFilterService implements PoMultiselectFilter {
   constructor(private http: HttpClient) {}
 
   // getFilteredData(param: any, filterParams?: any): Observable<Array<PoMultiselectOption>> {
-  getFilteredData(param?: any, filterParams?: any) {
-    // const value = param.value;
-    // const filterParamsValidated = validateObjectType(filterParams);
-
-    // const params = { ...filterParamsValidated, filter: value };
-
-    // return this.http
-    //   .get(`${this.url}`, { responseType: 'json', params, headers: this.headers })
-    //   .pipe(map((response: PoResponse) => this.parseToArrayMultiselectOption(response.items)));
+  getFilteredData(param?: any, filterParams?: any): Observable<any> {
     console.log('getFilteredData, param: ', param, 'filterParams: ', filterParams);
+    const value = param.value;
+    const filterParamsValidated = validateObjectType(filterParams);
+
+    const params = { ...filterParamsValidated, filter: value };
+
+    return this.http.get(`${this.url}`, { responseType: 'json', params, headers: this.headers });
+    //   .pipe(map((response: PoResponse) => this.parseToArrayMultiselectOption(response.items)));
   }
 
   // getObjectsByValues(value: string | number, filterParams?: any): Observable<PoMultiselectOption> {
@@ -57,11 +56,12 @@ export class PoMultiselectFilterService implements PoMultiselectFilter {
     console.log('getObjectsByValues, value: ', value, 'filterParams: ', filterParams);
   }
 
-  // configProperties(url: string, fieldLabel: string, fieldValue: string) {
-  //   this._url = url;
-  //   this.fieldLabel = fieldLabel;
-  //   this.fieldValue = fieldValue;
-  // }
+  configProperties(url: string, fieldLabel: string, fieldValue: string) {
+    console.log('configProperties', url, fieldLabel, fieldValue);
+    this._url = url;
+    this.fieldLabel = fieldLabel;
+    this.fieldValue = fieldValue;
+  }
 
   // private parseToArrayMultiselectOption(items: Array<any>): Array<PoMultiselectOption> {
   //   if (items && items.length > 0) {

@@ -69,14 +69,7 @@ export abstract class PoMultiselectBaseComponent implements ControlValueAccessor
    *
    * > Documentar.
    */
-  @Input('p-filter-service') set filterService(value: any) {
-    this._filterService = value;
-    console.log('set p-filter-service', value);
-  } // PoMultiselectFilter
-
-  get filterService() {
-    return this._filterService;
-  }
+  @Input('p-field-label') fieldLabel: string = 'label';
 
   /**
    * @optional
@@ -87,18 +80,7 @@ export abstract class PoMultiselectBaseComponent implements ControlValueAccessor
    *
    * > Documentar.
    */
-  @Input('p-field-label') fieldLabel: string;
-
-  /**
-   * @optional
-   *
-   * @description
-   *
-   * Documentar.
-   *
-   * > Documentar.
-   */
-  @Input('p-field-value') fieldValue: string;
+  @Input('p-field-value') fieldValue: string = 'value';
 
   /**
    * @optional
@@ -195,6 +177,24 @@ export abstract class PoMultiselectBaseComponent implements ControlValueAccessor
   private lastLengthModel;
   private onModelChange: any;
   private validatorChange: any;
+
+  /**
+   * @optional
+   *
+   * @description
+   *
+   * Documentar.
+   *
+   * > Documentar.
+   */
+  @Input('p-filter-service') set filterService(value: any) {
+    this._filterService = value;
+    console.log('set p-filter-service', value);
+  }
+
+  get filterService() {
+    return this._filterService;
+  }
 
   /**
    * @optional

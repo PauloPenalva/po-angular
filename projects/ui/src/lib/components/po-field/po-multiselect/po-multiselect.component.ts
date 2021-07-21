@@ -68,7 +68,7 @@ const providers = [
 @Component({
   selector: 'po-multiselect',
   templateUrl: './po-multiselect.component.html',
-  providers
+  providers: [PoMultiselectFilterService]
 })
 export class PoMultiselectComponent extends PoMultiselectBaseComponent implements AfterViewInit, DoCheck, OnDestroy {
   @ViewChild('dropdownElement', { read: ElementRef, static: true }) dropdownElement: ElementRef;
@@ -86,6 +86,7 @@ export class PoMultiselectComponent extends PoMultiselectBaseComponent implement
 
   private isCalculateVisibleItems: boolean = true;
   private filterSubscription: Subscription;
+  private isFirstFilter: boolean = true;
 
   constructor(
     private renderer: Renderer2,
@@ -103,6 +104,10 @@ export class PoMultiselectComponent extends PoMultiselectBaseComponent implement
       this.focus();
     }
     this.initialized = true;
+
+    if (this.filterService) {
+      this.applyFilterInFirstClick();
+    }
   }
 
   ngDoCheck() {
@@ -244,34 +249,35 @@ export class PoMultiselectComponent extends PoMultiselectBaseComponent implement
       return;
     }
 
-    // if (this.service && !this.disabledInitFilter) {
-    // console.log('toggleDropdownVisibility -> filterService', this.filterService);
-    if (this.filterService) {
-      // this.applyFilterInFirstClick();
-      console.log('toggleDropdownVisibility -> filterService', this.filterService);
-      this.applyFilterInFirstClick();
-    }
-
     this.controlDropdownVisibility(!this.dropdownOpen);
   }
 
   applyFilterInFirstClick() {
-    // if (this.isFirstFilter && !this.selectedValue) {
-    this.applyFilter('');
-    // }
+    if (this.isFirstFilter) {
+      this.isFirstFilter = !this.isFirstFilter;
+      this.applyFilter('');
+    }
   }
 
   applyFilter(value: string) {
-    // this.controlComboVisibility(false);
-    // this.isServerSearching = true;
+    const param = { property: this.fieldLabel, value };
 
-    // const param = { property: this.fieldLabel, value };
+    this.poMultiselectFilterService.configProperties(this.filterService, this.fieldLabel, this.fieldValue);
 
-    // this.filterSubscription = this.poMultiselectFilterService.getFilteredData(param, this.filterParams).subscribe(
-    //   items => this.setOptionsByApplyFilter(value, items),
-    //   error => this.onErrorFilteredData()
-    // );
-    this.poMultiselectFilterService.getFilteredData();
+    this.filterSubscription = this.poMultiselectFilterService.getFilteredData(param).subscribe(
+      data => this.setOptionsByApplyFilter(data.items),
+      error => this.onErrorFilteredData()
+    );
+  }
+
+  setOptionsByApplyFilter(items) {
+    this.options = [...items];
+
+    this.changeDetector.detectChanges();
+  }
+
+  onErrorFilteredData() {
+    console.log('deu erro na busca');
   }
 
   openDropdown(toOpen) {

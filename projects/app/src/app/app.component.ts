@@ -11,5 +11,5 @@ export class AppComponent {
     { value: 'poMultiselect2', label: 'PO Multiselect 2' }
   ];
 
-  myFilterService = 'teste';
+  myFilterService = 'https://po-sample-api.herokuapp.com/v1/heroes';
 }
