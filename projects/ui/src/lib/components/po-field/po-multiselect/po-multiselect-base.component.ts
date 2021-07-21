@@ -54,6 +54,57 @@ export abstract class PoMultiselectBaseComponent implements ControlValueAccessor
    *
    * @description
    *
+   * Documentar.
+   *
+   * > Documentar.
+   */
+  @Input('p-debounce-time') debounceTime: number;
+
+  /**
+   * @optional
+   *
+   * @description
+   *
+   * Documentar.
+   *
+   * > Documentar.
+   */
+  @Input('p-filter-service') set filterService(value: any) {
+    this._filterService = value;
+    console.log('set p-filter-service', value);
+  } // PoMultiselectFilter
+
+  get filterService() {
+    return this._filterService;
+  }
+
+  /**
+   * @optional
+   *
+   * @description
+   *
+   * Documentar.
+   *
+   * > Documentar.
+   */
+  @Input('p-field-label') fieldLabel: string;
+
+  /**
+   * @optional
+   *
+   * @description
+   *
+   * Documentar.
+   *
+   * > Documentar.
+   */
+  @Input('p-field-value') fieldValue: string;
+
+  /**
+   * @optional
+   *
+   * @description
+   *
    * Aplica foco no elemento ao ser iniciado.
    *
    * > Caso mais de um elemento seja configurado com essa propriedade, apenas o último elemento declarado com ela terá o foco.
@@ -131,6 +182,7 @@ export abstract class PoMultiselectBaseComponent implements ControlValueAccessor
   protected clickOutListener: () => void;
   protected resizeListener: () => void;
 
+  private _filterService: any;
   private _disabled?: boolean = false;
   private _filterMode?: PoMultiselectFilterMode = PoMultiselectFilterMode.startsWith;
   private _hideSearch?: boolean = false;
