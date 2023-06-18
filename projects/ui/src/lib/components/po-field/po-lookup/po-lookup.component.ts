@@ -20,6 +20,7 @@ import { uuid } from '../../../utils/util';
 import { PoLookupBaseComponent } from './po-lookup-base.component';
 import { PoLookupFilterService } from './services/po-lookup-filter.service';
 import { PoLookupModalService } from './services/po-lookup-modal.service';
+import { PoKeyCodeEnum } from 'src/lib/enums/po-key-code.enum';
 
 /* istanbul ignore next */
 const providers = [
@@ -188,6 +189,12 @@ export class PoLookupComponent extends PoLookupBaseComponent implements AfterVie
   focus(): void {
     if (!this.disabled) {
       this.inputEl.nativeElement.focus();
+    }
+  }
+
+  onKeyUp(ev: KeyboardEvent) {
+    if (ev.key === 'F4') {
+      this.openLookup();
     }
   }
 
