@@ -1,7 +1,7 @@
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
-import { Subscription, Observable, EMPTY, concat, of } from 'rxjs';
+import { Subscription, Observable, EMPTY, of } from 'rxjs';
 import { tap, switchMap, map } from 'rxjs/operators';
 
 import {
@@ -258,6 +258,16 @@ export class PoPageDynamicTableComponent extends PoPageDynamicListBaseComponent 
    * > Esta definição não se aplica aos itens filhos, os mesmos possuem comportamento independente do item pai.
    */
   @Input('p-single-select') @InputBoolean() singleSelect?: boolean = false;
+
+  /**
+   * @description
+   *
+   * Habilita ou desabilita o estilo listrado da tabela (`striped`).
+   * > Recomendado para tabelas com maior número de dados, facilitando a sua visualização na tabela.
+   *
+   * @default `false`
+   */
+  @Input('p-striped') @InputBoolean() striped?: boolean = false;
 
   hasNext = false;
   items = [];
@@ -549,7 +559,6 @@ export class PoPageDynamicTableComponent extends PoPageDynamicListBaseComponent 
 
   onChangeDisclaimers(disclaimers) {
     const filter = {};
-
     disclaimers.forEach(disclaimer => {
       filter[disclaimer.property] = disclaimer.value;
     });
