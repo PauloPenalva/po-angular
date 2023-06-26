@@ -10,7 +10,8 @@ import {
   Renderer2,
   ViewChild,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  HostListener
 } from '@angular/core';
 import { NgControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -192,7 +193,7 @@ export class PoLookupComponent extends PoLookupBaseComponent implements AfterVie
     }
   }
 
-  onKeyUp(ev: KeyboardEvent) {
+  @HostListener('keyup', ['$event']) onKeyUp(ev: KeyboardEvent) {
     if (ev.key === 'F4') {
       this.openLookup();
     }

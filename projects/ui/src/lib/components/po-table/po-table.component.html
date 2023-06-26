@@ -523,7 +523,12 @@
               </span>
 
               <span *ngSwitchCase="'cellTemplate'">
-                <ng-container *ngTemplateOutlet="tableCellTemplate?.templateRef; context: { row: row, column: column }">
+                <ng-container
+                  *ngTemplateOutlet="
+                    tableCellTemplate?.templateRef;
+                    context: { row: row, column: column, rowIndex: rowIndex }
+                  "
+                >
                 </ng-container>
               </span>
 
