@@ -1,5 +1,5 @@
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, AfterContentChecked, HostListener } from '@angular/core';
 
 import { Subscription, Observable, EMPTY, of } from 'rxjs';
 import { tap, switchMap, map } from 'rxjs/operators';
@@ -41,7 +41,7 @@ import { PoPageDynamicTableCustomTableAction } from './interfaces/po-page-dynami
 import { isExternalLink, openExternalLink, removeDuplicateItemsWithArrayKey } from '../../utils/util';
 import { PoPageDynamicSearchLiterals } from '../po-page-dynamic-search/po-page-dynamic-search-literals.interface';
 
-const PAGE_SIZE_DEFAULT = 10;
+const PAGE_SIZE_DEFAULT = 25;
 
 type UrlOrPoCustomizationFunction = string | (() => PoPageDynamicTableOptions);
 
@@ -134,7 +134,9 @@ type UrlOrPoCustomizationFunction = string | (() => PoPageDynamicTableOptions);
   templateUrl: './po-page-dynamic-table.component.html',
   providers: [PoPageDynamicService]
 })
-export class PoPageDynamicTableComponent extends PoPageDynamicListBaseComponent implements OnInit, OnDestroy {
+export class PoPageDynamicTableComponent
+  extends PoPageDynamicListBaseComponent
+  implements OnInit, OnDestroy, AfterContentChecked {
   /**
    * Função ou serviço que será executado na inicialização do componente.
    *
@@ -249,6 +251,13 @@ export class PoPageDynamicTableComponent extends PoPageDynamicListBaseComponent 
   @InputBoolean()
   @Input('p-infinite-scroll')
   infiniteScroll?: boolean = false;
+
+  @Input('p-infinite-scroll-distance')
+  infiniteScrollDistance?: number = 90;
+
+  @InputBoolean()
+  @Input('p-infinite-scroll')
+  hideOverflow?: boolean = false;
 
   /**
    * @description
@@ -542,6 +551,15 @@ export class PoPageDynamicTableComponent extends PoPageDynamicListBaseComponent 
 
   ngOnInit(): void {
     this.loadDataFromAPI();
+  }
+
+  ngAfterContentChecked(): void {
+    this.height = window.innerHeight * 0.55;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.height = event.target.innerHeight * 0.55;
   }
 
   ngOnDestroy() {
