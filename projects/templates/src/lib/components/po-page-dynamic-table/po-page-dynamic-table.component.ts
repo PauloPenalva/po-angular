@@ -5,6 +5,7 @@ import { EMPTY, Observable, Subscription, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 import {
+  InputBoolean,
   PoDialogConfirmOptions,
   PoDialogService,
   PoLanguageService,
