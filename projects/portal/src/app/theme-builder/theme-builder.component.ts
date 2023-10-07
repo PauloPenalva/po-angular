@@ -1,49 +1,113 @@
-import { Component, ViewChild, AfterViewInit, Renderer2, ElementRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Renderer2,
+  ViewChild,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import {
   PoButtonComponent,
-  PoSwitchComponent,
-  PoRadioComponent,
-  PoDisclaimerComponent,
-  PoInputComponent,
-  PoSelectComponent,
-  PoTextareaComponent,
-  PoDropdownComponent,
   PoDatepickerComponent,
-  PoLinkComponent,
+  PoDisclaimerComponent,
+  PoDropdownComponent,
+  PoInputComponent,
+  PoListViewAction,
+  PoListViewLiterals,
   PoModalComponent,
+  PoPageSlideComponent,
   PoPopupComponent,
-  PoCheckboxComponent
-} from '@po-ui/ng-components';
+  PoSelectComponent,
+  PoSwitchComponent,
+  PoTextareaComponent
+} from '../../../../ui/src/lib';
 
 @Component({
   selector: 'app-theme-builder',
   templateUrl: './theme-builder.component.html',
-  styleUrls: ['theme-builder.component.css']
+  styleUrls: ['theme-builder.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class ThemeBuilderComponent implements AfterViewInit {
+export class ThemeBuilderComponent implements AfterViewInit, OnInit {
   @ViewChild('viewCSSModal') viewCSSModal: PoModalComponent;
+  @ViewChild(PoPageSlideComponent, { static: true }) pageSlide: PoPageSlideComponent;
 
   @ViewChild('target', { read: ElementRef, static: true }) target: ElementRef;
+  @ViewChild('targeDefault', { read: ElementRef, static: true }) targeDefault: ElementRef;
+  @ViewChild('targetHover', { read: ElementRef, static: true }) targetHover: ElementRef;
+  @ViewChild('buttonConfig', { read: ElementRef }) buttonConfig: ElementRef;
   @ViewChild('buttonP') buttonP: PoButtonComponent;
+  @ViewChild('buttonPDefault', { read: ElementRef }) buttonPDefault: ElementRef;
+  @ViewChild('buttonPHover') buttonPHover: PoButtonComponent;
+  @ViewChild('buttonPFocus') buttonPFocus: PoButtonComponent;
+  @ViewChild('buttonPPressed') buttonPPressed: PoButtonComponent;
+  @ViewChild('buttonPDisabled') buttonPDisabled: PoButtonComponent;
   @ViewChild('buttonD') buttonD: PoButtonComponent;
+  @ViewChild('buttonDDefault') buttonDDefault: PoButtonComponent;
+  @ViewChild('buttonDHover') buttonDHover: PoButtonComponent;
+  @ViewChild('buttonDFocus') buttonDFocus: PoButtonComponent;
+  @ViewChild('buttonDPressed') buttonDPressed: PoButtonComponent;
+  @ViewChild('buttonDDisabled') buttonDDisabled: PoButtonComponent;
   @ViewChild('buttonL') buttonL: PoButtonComponent;
+  @ViewChild('buttonLDefault') buttonLDefault: PoButtonComponent;
+  @ViewChild('buttonLHover') buttonLHover: PoButtonComponent;
+  @ViewChild('buttonLFocus') buttonLFocus: PoButtonComponent;
+  @ViewChild('buttonLPressed') buttonLPressed: PoButtonComponent;
+  @ViewChild('buttonLDisabled') buttonLDisabled: PoButtonComponent;
   @ViewChild('switch') switch: PoSwitchComponent;
-  @ViewChild('radio') radioComponent: PoRadioComponent;
+  @ViewChild('switchDefault') switchDefault: PoSwitchComponent;
+  @ViewChild('switchChecked') switchChecked: PoSwitchComponent;
+  @ViewChild('switchUnchecked') switchUnchecked: PoSwitchComponent;
+  @ViewChild('radioDefault', { read: ElementRef }) radioDefault: ElementRef;
+  @ViewChild('radioDefault2', { read: ElementRef }) radioDefault2: ElementRef;
+  @ViewChild('radioHover', { read: ElementRef }) radioHover: ElementRef;
+  @ViewChild('radioHover2', { read: ElementRef }) radioHover2: ElementRef;
   @ViewChild('disclaimer') disclaimerComponent: PoDisclaimerComponent;
+  @ViewChild('disclaimerDefault', { read: ElementRef }) disclaimerDefault: ElementRef;
+  @ViewChild('disclaimerHover') disclaimerHover: PoDisclaimerComponent;
   @ViewChild('input') inputComponent: PoInputComponent;
+  @ViewChild('inputHover') inputHover: PoInputComponent;
+  @ViewChild('inputDefault') inputDefault: PoInputComponent;
+  @ViewChild('inputFocus') inputFocus: PoInputComponent;
+  @ViewChild('inputDisabled') inputDisabled: PoInputComponent;
   @ViewChild('select') selectComponent: PoSelectComponent;
+  @ViewChild('selectDefault', { read: ElementRef }) selectDefault: ElementRef;
+  @ViewChild('selectHover') selectHover: PoSelectComponent;
+  @ViewChild('selectFocus') selectFocus: PoSelectComponent;
+  @ViewChild('selectDisabled') selectDisabled: PoSelectComponent;
   @ViewChild('textarea') textareaComponent: PoTextareaComponent;
+  @ViewChild('textareaDefault', { read: ElementRef }) textareaDefault: ElementRef;
+  @ViewChild('textareaHover') textareaHover: PoTextareaComponent;
+  @ViewChild('textareaFocus') textareaFocus: PoTextareaComponent;
+  @ViewChild('textareaDisabled') textareaDisabled: PoTextareaComponent;
   @ViewChild('modalBuilder', { read: ElementRef }) modalBuilder: ElementRef;
+  @ViewChild('modalDefault', { read: ElementRef }) modalDefault: ElementRef;
   @ViewChild('datepicker') datepickerComponent: PoDatepickerComponent;
-  @ViewChild('datepickerButton') datepickerComponentButton: PoDatepickerComponent;
-  @ViewChild('modal') modalComponent: PoModalComponent;
-  @ViewChild('link') linkComponent: PoLinkComponent;
+  @ViewChild('datepickerDefault') datepickerDefault: PoDatepickerComponent;
+  @ViewChild('datepickerHover') datepickerHover: PoDatepickerComponent;
+  @ViewChild('datepickerFocus') datepickerFocus: PoDatepickerComponent;
+  @ViewChild('datepickerDisabled') datepickerDisabled: PoDatepickerComponent;
+  @ViewChild('linkDefault', { read: ElementRef }) linkDefault: ElementRef;
+  @ViewChild('linkVisited', { read: ElementRef }) linkVisited: ElementRef;
+  @ViewChild('linkUnvisited', { read: ElementRef }) linkUnvisited: ElementRef;
   @ViewChild('tooltip') tooltip: PoButtonComponent;
+  @ViewChild('tooltipDefault') tooltipDefault: PoButtonComponent;
   @ViewChild('dropdown') dropdownComponent: PoDropdownComponent;
+  @ViewChild('dropdownDefault') dropdownDefault: PoDropdownComponent;
+  @ViewChild('dropdownHover') dropdownHover: PoDropdownComponent;
+  @ViewChild('dropdownFocus') dropdownFocus: PoDropdownComponent;
+  @ViewChild('dropdownDisabled') dropdownDisabled: PoDropdownComponent;
   @ViewChild('popupBuilder') popupBuilder: PoPopupComponent;
-  @ViewChild('checkboxBuilder') checkboxBuilder: PoCheckboxComponent;
+  @ViewChild('popupDefault') popupDefault: PoPopupComponent;
+  @ViewChild('popupHover') popupHover: PoPopupComponent;
+  @ViewChild('checkboxDefault', { read: ElementRef }) checkboxDefault: ElementRef;
+  @ViewChild('checkboxChecked', { read: ElementRef }) checkboxChecked: ElementRef;
+  @ViewChild('checkboxUnchecked', { read: ElementRef }) checkboxUnchecked: ElementRef;
+  @ViewChild('checkboxHover', { read: ElementRef }) checkboxHover: ElementRef;
   @ViewChild('resultButtonD') resultButtonD: HTMLElement;
   @ViewChild('resultButtonP') resultButtonP: HTMLElement;
   @ViewChild('resultButtonL') resultButtonL: HTMLElement;
@@ -63,9 +127,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
   @ViewChild('resultPopupContainer') resultPopupContainer: HTMLElement;
   @ViewChild('resultCheckbox') resultCheckbox: HTMLElement;
 
-  botaoDefaultView = true;
   botaoPrimaryView = true;
-  botaoLinkView = true;
   switchView = true;
   radioView = true;
   disclaimerView = true;
@@ -79,192 +141,89 @@ export class ThemeBuilderComponent implements AfterViewInit {
   dropdownView = true;
   popupView = true;
   checkboxView = true;
-  acordionView = true;
-  calendarView = true;
-  stepperView = true;
   switchSampleBuilder = true;
 
   switchAllComponentes = true;
 
+  colorBack!: string;
+  colorText = '#ffffff';
+  changedColorButton = false;
+  changedColorPopup = false;
+  itemSelected!: string;
+  kindButton = 1;
+  nameItem!: string;
+  ratio!: number;
+  ratioButton!: number;
+  ratioDisclaimer!: number;
+  ratioInput!: number;
+  ratioSelect!: number;
+  ratioTextarea!: number;
+  ratioDatepicker!: number;
+  ratioTooltip!: number;
+  ratioPopup!: number;
+
   // Cor primária
-  brandFormP = this.formBuilder.group({
-    colorAction: ['#c9357d'] as any
-  });
+  brandFormP: FormGroup;
 
   // Cor secundária
-  brandFormS = this.formBuilder.group({
-    colorAction: ['#753399'] as any
-  });
+  brandFormS: FormGroup;
 
   // Cor terciária
-  brandFormT = this.formBuilder.group({
-    colorAction: ['#ffd464'] as any
-  });
+  brandFormT: FormGroup;
 
   // Botão Primário
-  buttonFormPrimary = this.formBuilder.group({
-    color: [null],
-    colorHover: [null],
-    borderColor: [null],
-    textColor: [null],
-    colorAction: [null],
-    borderRadius: [null],
-    padding: [null]
-  });
+  buttonFormPrimary: FormGroup;
 
   // Botão Default
-  buttonFormDefault = this.formBuilder.group({
-    color: [null],
-    colorHover: [null],
-    colorBackgroundHover: [null],
-    borderRadius: [null],
-    padding: [null],
-    borderWidth: [null]
-  });
+  buttonFormDefault: FormGroup;
 
   // Botão Link
-  buttonFormLink = this.formBuilder.group({
-    color: [null],
-    colorHover: [null],
-    colorBackgroundHover: [null],
-    borderRadius: [null],
-    padding: [null]
-  });
+  buttonFormLink: FormGroup;
 
   // Switch
-  switchForm = this.formBuilder.group({
-    backgroundColor: [null],
-    color: [null],
-    colorIcon: [null],
-    borderColor: [null],
-    colorDois: [null]
-  });
+  switchForm: FormGroup;
 
   // disclaimer
-  disclaimerForm = this.formBuilder.group({
-    color: [null],
-    borderColor: [null],
-    colorIcon: [null],
-    textColor: [null],
-    colorHover: [null],
-    borderRadius: [null],
-    fontSize: [null]
-  });
+  disclaimerForm: FormGroup;
 
   //input
-  inputForm = this.formBuilder.group({
-    borderColor: [null],
-    borderColorHover: [null],
-    textColor: [null],
-    backgroundColor: [null],
-    backgroundColorHover: [null],
-    fontSize: [null],
-    padding: [null]
-  });
+  inputForm: FormGroup;
 
   //select
-  selectForm = this.formBuilder.group({
-    borderColor: [null],
-    borderColorHover: [null],
-    colorBackground: [null],
-    colorBackgroundHover: [null],
-    colorText: [null],
-    fontSize: [null],
-    paddingHorizontal: [null],
-    paddingVertical: [null]
-  });
+  selectForm: FormGroup;
 
   //textarea
-  textareaForm = this.formBuilder.group({
-    borderColor: [null],
-    borderColorHover: [null],
-    textColor: [null],
-    backgroundColor: [null],
-    backgroundColorHover: [null],
-    fontSize: [null]
-  });
+  textareaForm: FormGroup;
 
   //datepicker
-  datepickerForm = this.formBuilder.group({
-    padding: [null],
-    fontSize: [null],
-    color: [null],
-    colorHover: [null],
-    backgroundColor: [null],
-    backgroundColorHover: [null]
-  });
+  datepickerForm: FormGroup;
 
   //button do datepicker
-  datepickerButtonForm = this.formBuilder.group({
-    padding: [null],
-    color: [null],
-    backgroundColorHover: [null],
-    borderColorHover: [null]
-  });
+  datepickerButtonForm: FormGroup;
 
   //modal
-  modalForm = this.formBuilder.group({
-    borderRadius: [null],
-    borderWidth: [null],
-    opacityValue: [null],
-    backgroundColor: [null],
-    borderColor: [null],
-    overlayColor: [null],
-    dividerColor: [null]
-  });
+  modalForm: FormGroup;
 
   //link
-  linkForm = this.formBuilder.group({
-    colorVisited: [null],
-    color: [null],
-    colorOutline: [null]
-  });
+  linkForm: FormGroup;
 
   //tooltip
-  tooltipForm = this.formBuilder.group({
-    color: [null],
-    borderRadius: [null],
-    textColor: [null]
-  });
+  tooltipForm: FormGroup;
 
   //dropdown
-  dropdownForm = this.formBuilder.group({
-    fontSize: [null],
-    borderRadius: [null],
-    borderWidth: [null],
-    padding: [null],
-    color: [null],
-    colorHover: [null],
-    backgroundColorHover: [null]
-  });
+  dropdownForm: FormGroup;
 
   //popup item
-  popupForm = this.formBuilder.group({
-    color: [null],
-    colorHover: [null],
-    colorBackgroundHover: [null]
-  });
+  popupForm: FormGroup;
 
   //popup container
-  popupContainerForm = this.formBuilder.group({
-    colorBackground: [null]
-  });
+  popupContainerForm: FormGroup;
 
   // Radio
-  radioForm = this.formBuilder.group({
-    color: [null],
-    backgroundColor: [null],
-    colorHover: [null],
-    borderColor: [null]
-  });
+  radioForm: FormGroup;
 
   //checkbox
-  checkboxForm = this.formBuilder.group({
-    color: [null],
-    backgroundColor: [null],
-    colorHover: [null],
-    borderColor: [null]
-  });
+  checkboxForm: FormGroup;
 
   private readonly formPropertyP = {
     colorAction: '--color-primary'
@@ -284,6 +243,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
     colorHover: '--color-hover',
     borderColor: '--border-color',
     textColor: '--text-color',
+    colorPressed: '--color-pressed',
     borderRadius: '--border-radius',
     padding: '--padding'
   };
@@ -292,6 +252,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
     color: '--color',
     colorHover: '--border-color-hover',
     colorBackgroundHover: '--background-hover',
+    colorPressed: '--background-pressed',
     borderRadius: '--border-radius',
     padding: '--padding',
     borderWidth: '--border-width'
@@ -301,6 +262,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
     color: '--color',
     colorHover: '--border-color-hover',
     colorBackgroundHover: '--background-hover',
+    colorPressed: '--background-pressed',
     borderRadius: '--border-radius',
     padding: '--padding'
   };
@@ -338,7 +300,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
     borderColorHover: '--color-hover',
     colorBackground: '--background',
     colorBackgroundHover: '--background-hover',
-    colorText: '--text-color',
+    textColor: '--text-color',
     fontSize: '--font-size',
     paddingHorizontal: '--padding-horizontal',
     paddingVertical: '--padding-vertical'
@@ -367,6 +329,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
     padding: '--padding',
     fontSize: '--font-size',
     color: '--color',
+    textColor: '--text-color',
     backgroundColor: '--background',
     backgroundColorHover: '--background-hover',
     colorHover: '--color-hover'
@@ -425,7 +388,185 @@ export class ThemeBuilderComponent implements AfterViewInit {
     borderColor: '--border-color'
   };
 
-  constructor(private formBuilder: FormBuilder, private renderer: Renderer2) {}
+  listViewLiterals: PoListViewLiterals = {
+    showDetails: 'Mais Detalhes',
+    hideDetails: 'Menos Detalhes'
+  };
+
+  listViewAction: Array<PoListViewAction> = [
+    {
+      label: 'Reset Css',
+      action: this.resetCss.bind(this),
+      type: 'primary'
+    }
+  ];
+
+  constructor(private formBuilder: FormBuilder, private renderer: Renderer2, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.brandFormP = this.formBuilder.group({
+      colorAction: ['#c9357d'] as any
+    });
+
+    this.brandFormS = this.formBuilder.group({
+      colorAction: ['#753399'] as any
+    });
+
+    this.brandFormT = this.formBuilder.group({
+      colorAction: ['#ffd464'] as any
+    });
+
+    this.buttonFormPrimary = this.formBuilder.group({
+      color: [null],
+      colorHover: [null],
+      colorPressed: [null],
+      borderColor: [null],
+      textColor: [null],
+      colorAction: [null],
+      borderRadius: [null],
+      padding: [null]
+    });
+
+    this.buttonFormDefault = this.formBuilder.group({
+      color: [null],
+      colorHover: [null],
+      colorBackgroundHover: [null],
+      colorPressed: [null],
+      borderRadius: [null],
+      padding: [null],
+      borderWidth: [null]
+    });
+
+    this.buttonFormLink = this.formBuilder.group({
+      color: [null],
+      colorHover: [null],
+      colorBackgroundHover: [null],
+      colorPressed: [null],
+      borderRadius: [null],
+      padding: [null]
+    });
+
+    this.switchForm = this.formBuilder.group({
+      backgroundColor: [null],
+      color: [null],
+      colorIcon: [null],
+      borderColor: [null],
+      colorDois: [null]
+    });
+
+    this.disclaimerForm = this.formBuilder.group({
+      color: [null],
+      borderColor: [null],
+      colorIcon: [null],
+      textColor: [null],
+      colorHover: [null],
+      borderRadius: [null],
+      fontSize: [null]
+    });
+
+    this.inputForm = this.formBuilder.group({
+      borderColor: [null],
+      borderColorHover: [null],
+      textColor: [null],
+      backgroundColor: [null],
+      backgroundColorHover: [null],
+      fontSize: [null],
+      padding: [null]
+    });
+
+    this.selectForm = this.formBuilder.group({
+      borderColor: [null],
+      borderColorHover: [null],
+      colorBackground: [null],
+      colorBackgroundHover: [null],
+      textColor: [null],
+      fontSize: [null],
+      paddingHorizontal: [null],
+      paddingVertical: [null]
+    });
+
+    this.textareaForm = this.formBuilder.group({
+      borderColor: [null],
+      borderColorHover: [null],
+      textColor: [null],
+      backgroundColor: [null],
+      backgroundColorHover: [null],
+      fontSize: [null]
+    });
+
+    this.datepickerForm = this.formBuilder.group({
+      padding: [null],
+      fontSize: [null],
+      color: [null],
+      textColor: [null],
+      colorHover: [null],
+      backgroundColor: [null],
+      backgroundColorHover: [null]
+    });
+
+    this.datepickerButtonForm = this.formBuilder.group({
+      padding: [null],
+      color: [null],
+      backgroundColorHover: [null],
+      borderColorHover: [null]
+    });
+
+    this.modalForm = this.formBuilder.group({
+      borderRadius: [null],
+      borderWidth: [null],
+      opacityValue: [null],
+      backgroundColor: [null],
+      borderColor: [null],
+      overlayColor: [null],
+      dividerColor: [null]
+    });
+
+    this.linkForm = this.formBuilder.group({
+      colorVisited: [null],
+      color: [null],
+      colorOutline: [null]
+    });
+
+    this.tooltipForm = this.formBuilder.group({
+      color: [null],
+      borderRadius: [null],
+      textColor: [null]
+    });
+
+    this.dropdownForm = this.formBuilder.group({
+      fontSize: [null],
+      borderRadius: [null],
+      borderWidth: [null],
+      padding: [null],
+      color: [null],
+      colorHover: [null],
+      backgroundColorHover: [null]
+    });
+
+    this.popupForm = this.formBuilder.group({
+      textColor: [null],
+      colorHover: [null],
+      colorBackgroundHover: [null]
+    });
+
+    this.popupContainerForm = this.formBuilder.group({
+      colorBackground: [null]
+    });
+
+    this.radioForm = this.formBuilder.group({
+      color: [null],
+      backgroundColor: [null],
+      colorHover: [null],
+      borderColor: [null]
+    });
+
+    this.checkboxForm = this.formBuilder.group({
+      color: [null],
+      backgroundColor: [null],
+      colorHover: [null],
+      borderColor: [null]
+    });
+  }
 
   openGetcss() {
     this.viewCSSModal.open();
@@ -435,43 +576,107 @@ export class ThemeBuilderComponent implements AfterViewInit {
     this.brandFormP.reset({
       colorAction: ['#c9357d']
     });
-    document.getElementsByTagName('html')[0].style.setProperty('--color-primary', null);
+    document.getElementById('myPortal').style.setProperty('--color-primary', null);
 
     this.brandFormS.reset({
       colorAction: ['#753399']
     });
-    document.getElementsByTagName('html')[0].style.setProperty('--color-secondary', null);
+    document.getElementById('myPortal').style.setProperty('--color-secondary', null);
 
     this.brandFormT.reset({
       colorAction: ['#ffd464']
     });
-    document.getElementsByTagName('html')[0].style.setProperty('--color-tertiary', null);
+    document.getElementById('myPortal').style.setProperty('--color-tertiary', null);
 
     this.buttonFormDefault.reset();
     Object.keys(this.formPropertyDictButtonD).forEach((fieldName: string) => {
       this.buttonD.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonD[fieldName], null);
+      if (this.itemSelected === 'button') {
+        this.buttonDDefault.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictButtonD[fieldName],
+          null
+        );
+        this.buttonDHover.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonD[fieldName], null);
+        this.buttonDFocus.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonD[fieldName], null);
+        this.buttonDPressed.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictButtonD[fieldName],
+          null
+        );
+        this.buttonDDisabled.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictButtonD[fieldName],
+          null
+        );
+      }
     });
 
     this.buttonFormPrimary.reset();
     Object.keys(this.formPropertyDictButtonP).forEach((fieldName: string) => {
       this.buttonP.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonP[fieldName], null);
+      if (this.itemSelected === 'button') {
+        this.buttonPDefault.nativeElement.style.setProperty(this.formPropertyDictButtonP[fieldName], null);
+        this.buttonPHover.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonP[fieldName], null);
+        this.buttonPFocus.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonP[fieldName], null);
+        this.buttonPPressed.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictButtonP[fieldName],
+          null
+        );
+        this.buttonPDisabled.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictButtonP[fieldName],
+          null
+        );
+      }
     });
 
     this.buttonFormLink.reset();
     Object.keys(this.formPropertyDictButtonL).forEach((fieldName: string) => {
       this.buttonL.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonL[fieldName], null);
+      if (this.itemSelected === 'button') {
+        this.buttonLDefault.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictButtonL[fieldName],
+          null
+        );
+        this.buttonLHover.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonL[fieldName], null);
+        this.buttonLFocus.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonL[fieldName], null);
+        this.buttonLPressed.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictButtonL[fieldName],
+          null
+        );
+        this.buttonLDisabled.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictButtonL[fieldName],
+          null
+        );
+      }
     });
 
     this.switchForm.reset();
     Object.keys(this.formPropertyDictSwitch).forEach((fieldName: string) => {
       this.switch.switchContainer.nativeElement.style.setProperty(this.formPropertyDictSwitch[fieldName], null);
+      if (this.itemSelected === 'switch') {
+        this.switchDefault.switchContainer.nativeElement.style.setProperty(
+          this.formPropertyDictSwitch[fieldName],
+          null
+        );
+        this.switchChecked.switchContainer.nativeElement.style.setProperty(
+          this.formPropertyDictSwitch[fieldName],
+          null
+        );
+        this.switchUnchecked.switchContainer.nativeElement.style.setProperty(
+          this.formPropertyDictSwitch[fieldName],
+          null
+        );
+      }
     });
 
     this.radioForm.reset();
     Object.keys(this.formPropertyDictRadio).forEach((fieldName: string) => {
       document.getElementById('myRadio').style.setProperty(this.formPropertyDictRadio[fieldName], null);
       document.getElementById('myRadio2').style.setProperty(this.formPropertyDictRadio[fieldName], null);
-      this.radioComponent.radio.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], null);
+      if (this.itemSelected === 'radio') {
+        this.radioDefault.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], null);
+        this.radioDefault2.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], null);
+        this.radioHover.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], null);
+        this.radioHover2.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], null);
+      }
     });
 
     this.disclaimerForm.reset();
@@ -480,21 +685,46 @@ export class ThemeBuilderComponent implements AfterViewInit {
         this.formPropertyDictDisclaimer[fieldName],
         null
       );
+      if (this.itemSelected === 'disclaimer') {
+        this.disclaimerDefault.nativeElement.style.setProperty(this.formPropertyDictDisclaimer[fieldName], null);
+        this.disclaimerHover.disclaimerContainer.nativeElement.style.setProperty(
+          this.formPropertyDictDisclaimer[fieldName],
+          null
+        );
+      }
     });
 
     this.inputForm.reset();
     Object.keys(this.formPropertyDictInput).forEach((fieldName: string) => {
       this.inputComponent.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], null);
+      if (this.itemSelected === 'input') {
+        this.inputHover.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], null);
+        this.inputDefault.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], null);
+        this.inputFocus.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], null);
+        this.inputDisabled.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], null);
+      }
     });
 
     this.selectForm.reset();
     Object.keys(this.formPropertyDictSelect).forEach((fieldName: string) => {
       this.selectComponent.selectElement.nativeElement.style.setProperty(this.formPropertyDictSelect[fieldName], null);
+      if (this.itemSelected === 'select') {
+        this.selectDefault.nativeElement.style.setProperty(this.formPropertyDictSelect[fieldName], null);
+        this.selectHover.selectElement.nativeElement.style.setProperty(this.formPropertyDictSelect[fieldName], null);
+        this.selectFocus.selectElement.nativeElement.style.setProperty(this.formPropertyDictSelect[fieldName], null);
+        this.selectDisabled.selectElement.nativeElement.style.setProperty(this.formPropertyDictSelect[fieldName], null);
+      }
     });
 
     this.textareaForm.reset();
     Object.keys(this.formPropertyDictTextarea).forEach((fieldName: string) => {
       this.textareaComponent.inputEl.nativeElement.style.setProperty(this.formPropertyDictTextarea[fieldName], null);
+      if (this.itemSelected === 'textarea') {
+        this.textareaDefault.nativeElement.style.setProperty(this.formPropertyDictTextarea[fieldName], null);
+        this.textareaHover.inputEl.nativeElement.style.setProperty(this.formPropertyDictTextarea[fieldName], null);
+        this.textareaFocus.inputEl.nativeElement.style.setProperty(this.formPropertyDictTextarea[fieldName], null);
+        this.textareaDisabled.inputEl.nativeElement.style.setProperty(this.formPropertyDictTextarea[fieldName], null);
+      }
     });
 
     this.dropdownForm.reset();
@@ -503,6 +733,18 @@ export class ThemeBuilderComponent implements AfterViewInit {
         this.formPropertyDictDropdown[fieldName],
         null
       );
+      if (this.itemSelected === 'drodpdown') {
+        this.dropdownDefault.dropdownRef.nativeElement.style.setProperty(
+          this.formPropertyDictDropdown[fieldName],
+          null
+        );
+        this.dropdownHover.dropdownRef.nativeElement.style.setProperty(this.formPropertyDictDropdown[fieldName], null);
+        this.dropdownFocus.dropdownRef.nativeElement.style.setProperty(this.formPropertyDictDropdown[fieldName], null);
+        this.dropdownDisabled.dropdownRef.nativeElement.style.setProperty(
+          this.formPropertyDictDropdown[fieldName],
+          null
+        );
+      }
     });
 
     this.datepickerForm.reset();
@@ -511,6 +753,17 @@ export class ThemeBuilderComponent implements AfterViewInit {
         this.formPropertyDictDatepicker[fieldName],
         null
       );
+      if (this.itemSelected === 'datepicker') {
+        this.datepickerDefault.inputEl.nativeElement.style.setProperty(
+          this.formPropertyDictDatepicker[fieldName],
+          null
+        );
+        this.datepickerHover.inputEl.nativeElement.style.setProperty(this.formPropertyDictDatepicker[fieldName], null);
+        this.datepickerDisabled.inputEl.nativeElement.style.setProperty(
+          this.formPropertyDictDatepicker[fieldName],
+          null
+        );
+      }
     });
 
     this.datepickerButtonForm.reset();
@@ -519,25 +772,39 @@ export class ThemeBuilderComponent implements AfterViewInit {
         this.formPropertyDictDatepickerButton[fieldName],
         null
       );
+      if (this.itemSelected === 'datepicker') {
+        this.datepickerDefault.iconDatepicker.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictDatepickerButton[fieldName],
+          null
+        );
+        this.datepickerHover.iconDatepicker.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictDatepickerButton[fieldName],
+          null
+        );
+        this.datepickerDisabled.iconDatepicker.buttonElement.nativeElement.style.setProperty(
+          this.formPropertyDictDatepickerButton[fieldName],
+          null
+        );
+      }
     });
 
     this.modalForm.reset();
     Object.keys(this.formPropertyDictModal).forEach((fieldName: string) => {
       this.modalBuilder.nativeElement.style.setProperty(this.formPropertyDictModal[fieldName], null);
+      if (this.itemSelected === 'modal') {
+        this.modalDefault.nativeElement.style.setProperty(this.formPropertyDictModal[fieldName], null);
+      }
     });
 
     this.linkForm.reset();
     Object.keys(this.formPropertyDictLink).forEach((fieldName: string) => {
       document.getElementById('myLink').style.setProperty(this.formPropertyDictLink[fieldName], null);
+      if (this.itemSelected === 'link') {
+        this.linkDefault.nativeElement.style.setProperty(this.formPropertyDictLink[fieldName], null);
+        this.linkVisited.nativeElement.style.setProperty(this.formPropertyDictLink[fieldName], null);
+        this.linkUnvisited.nativeElement.style.setProperty(this.formPropertyDictLink[fieldName], null);
+      }
     });
-
-    const tooltipElement = this.renderer.selectRootElement('.po-tooltip', true);
-    if (tooltipElement) {
-      this.tooltipForm.reset();
-      Object.keys(this.formPropertyDictTooltip).forEach((fieldName: string) => {
-        tooltipElement.style.setProperty(this.formPropertyDictTooltip[fieldName], null);
-      });
-    }
 
     this.popupForm.reset();
     Object.keys(this.formPropertyDictModal).forEach((fieldName: string) => {
@@ -545,6 +812,16 @@ export class ThemeBuilderComponent implements AfterViewInit {
         this.formPropertyDictPopup[fieldName],
         null
       );
+      if (this.itemSelected === 'popup') {
+        this.popupDefault.poListBoxRef.listboxItemList.nativeElement.children[0].children[0].style.setProperty(
+          this.formPropertyDictPopup[fieldName],
+          null
+        );
+        this.popupHover.poListBoxRef.listboxItemList.nativeElement.children[0].children[0].style.setProperty(
+          this.formPropertyDictPopup[fieldName],
+          null
+        );
+      }
     });
 
     this.popupContainerForm.reset();
@@ -554,19 +831,54 @@ export class ThemeBuilderComponent implements AfterViewInit {
           this.formPropertyDictModal[fieldName],
           null
         );
+        if (this.itemSelected === 'popup') {
+          this.popupDefault.listbox.nativeElement.listbox.nativeElement.style.setProperty(
+            this.formPropertyDictModal[fieldName],
+            null
+          );
+          this.popupHover.listbox.nativeElement.listbox.nativeElement.style.setProperty(
+            this.formPropertyDictModal[fieldName],
+            null
+          );
+        }
       }
     });
 
     this.checkboxForm.reset();
     Object.keys(this.formPropertyDictCheckbox).forEach((fieldName: string) => {
       document.getElementById('myCheckbox').style.setProperty(this.formPropertyDictCheckbox[fieldName], null);
-      if (this.checkboxBuilder?.checkboxLabel?.nativeElement) {
-        this.checkboxBuilder.checkboxLabel.nativeElement.style.setProperty(
-          this.formPropertyDictCheckbox[fieldName],
-          null
-        );
+      if (this.itemSelected === 'checkbox') {
+        this.checkboxDefault.nativeElement.style.setProperty(this.formPropertyDictCheckbox[fieldName], null);
+        this.checkboxChecked.nativeElement.style.setProperty(this.formPropertyDictCheckbox[fieldName], null);
+        this.checkboxUnchecked.nativeElement.style.setProperty(this.formPropertyDictCheckbox[fieldName], null);
+        this.checkboxHover.nativeElement.style.setProperty(this.formPropertyDictCheckbox[fieldName], null);
       }
     });
+
+    const tooltipElement = document.querySelector('.po-tooltip');
+    if (tooltipElement) {
+      this.tooltipForm.reset();
+      Object.keys(this.formPropertyDictTooltip).forEach((fieldName: string) => {
+        this.tooltip.buttonElement.nativeElement.nextElementSibling.style.setProperty(
+          this.formPropertyDictTooltip[fieldName],
+          null
+        );
+      });
+      if (this.itemSelected === 'tooltip') {
+        const tooltipDefault = this.tooltipDefault.buttonElement.nativeElement.nextElementSibling;
+        Object.keys(this.formPropertyDictTooltip).forEach((fieldName: string) => {
+          tooltipDefault.style.setProperty(this.formPropertyDictTooltip[fieldName], null);
+        });
+      }
+    }
+
+    this.setRatioDefault();
+    this.changedColorButton = false;
+    this.changedColorPopup = false;
+  }
+
+  changeKindButton(kindValue: number): void {
+    this.kindButton = kindValue;
   }
 
   copyToClipboard() {
@@ -585,8 +897,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     //foco no botão da tooltip para criar a div que possibilita a customização
     this.tooltip.focus();
-    this.buttonP.focus();
-
+    this.buttonConfig.nativeElement.focus();
     this.brandFormP.valueChanges.subscribe(changes => this.checkChangesBrandP(changes));
     this.brandFormS.valueChanges.subscribe(changes => this.checkChangesBrandS(changes));
     this.brandFormT.valueChanges.subscribe(changes => this.checkChangesBrandT(changes));
@@ -609,6 +920,41 @@ export class ThemeBuilderComponent implements AfterViewInit {
     this.popupForm.valueChanges.subscribe(changes => this.checkChangesPopup(changes));
     this.popupContainerForm.valueChanges.subscribe(changes => this.checkChangesPopupContainer(changes));
     this.checkboxForm.valueChanges.subscribe(changes => this.checkChangesCheckbox(changes));
+
+    this.setRatioDefault();
+  }
+
+  openPageSlide(itemLabel: string, item: string) {
+    this.itemSelected = item;
+    this.nameItem = `Personalizar ${itemLabel}`;
+    this.cdr.detectChanges();
+    if (item === 'button') {
+      this.setColorsBackAndText(this.buttonPDefault.nativeElement, this.ratioButton, '--color');
+    }
+    if (item === 'disclaimer') {
+      this.setColorsBackAndText(this.disclaimerDefault.nativeElement, this.ratioDisclaimer, '--color');
+    }
+    if (item === 'input') {
+      this.setColorsBackAndText(this.inputDefault.inp.nativeElement, this.ratioInput);
+    }
+    if (item === 'select') {
+      this.setColorsBackAndText(this.selectDefault.nativeElement, this.ratioSelect);
+    }
+    if (item === 'textarea') {
+      this.setColorsBackAndText(this.textareaDefault.nativeElement, this.ratioTextarea);
+    }
+    if (item === 'datepicker') {
+      this.setColorsBackAndText(this.datepickerDefault.inputEl.nativeElement, this.ratioDatepicker);
+    }
+    if (item === 'tooltip') {
+      const tooltip = this.tooltip.buttonElement.nativeElement.nextElementSibling;
+      this.setColorsBackAndText(tooltip, this.ratioTooltip);
+    }
+    if (item === 'popup') {
+      this.popupBuilder.open();
+      const popup = this.popupBuilder.poListBoxRef.listboxItemList.nativeElement.children[0].children[0];
+      this.setColorsBackAndText(popup, this.ratioPopup, '--background', '--color');
+    }
   }
 
   switchIndividual() {
@@ -623,9 +969,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
 
   switchAllEmit(valueSwitchAll) {
     if (valueSwitchAll) {
-      this.botaoDefaultView = true;
       this.botaoPrimaryView = true;
-      this.botaoLinkView = true;
       this.switchView = true;
       this.radioView = true;
       this.disclaimerView = true;
@@ -639,13 +983,8 @@ export class ThemeBuilderComponent implements AfterViewInit {
       this.tooltipView = true;
       this.popupView = true;
       this.checkboxView = true;
-      this.acordionView = true;
-      this.calendarView = true;
-      this.stepperView = true;
     } else {
-      this.botaoDefaultView = false;
       this.botaoPrimaryView = false;
-      this.botaoLinkView = false;
       this.switchView = false;
       this.radioView = false;
       this.disclaimerView = false;
@@ -659,10 +998,64 @@ export class ThemeBuilderComponent implements AfterViewInit {
       this.tooltipView = false;
       this.popupView = false;
       this.checkboxView = false;
-      this.acordionView = false;
-      this.calendarView = false;
-      this.stepperView = false;
     }
+  }
+
+  verifyIfItemVisibility() {
+    return (
+      this.botaoPrimaryView ||
+      this.switchView ||
+      this.radioView ||
+      this.disclaimerView ||
+      this.inputView ||
+      this.selectView ||
+      this.textareaView ||
+      this.dropdownView ||
+      this.datepickerView ||
+      this.modalView ||
+      this.linkView ||
+      this.tooltipView ||
+      this.popupView ||
+      this.checkboxView
+    );
+  }
+
+  private calculateRatio(colorBack: any, colorText: any) {
+    const color1rgb = this.calculatehexToRgb(colorBack);
+    const color2rgb = this.calculatehexToRgb(colorText);
+
+    const color1luminance = this.calculateLuminance(color1rgb.r, color1rgb.g, color1rgb.b);
+    const color2luminance = this.calculateLuminance(color2rgb.r, color2rgb.g, color2rgb.b);
+
+    const brightest = Math.max(color1luminance, color2luminance);
+    const darkest = Math.min(color1luminance, color2luminance);
+    const ratio = (brightest + 0.05) / (darkest + 0.05);
+
+    return Math.round(ratio * 100) / 100;
+  }
+
+  private calculatehexToRgb(hex) {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+      return r + r + g + g + b + b;
+    });
+
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        }
+      : null;
+  }
+
+  private calculateLuminance(r, g, b) {
+    const a = [r, g, b].map(function (v) {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
   }
 
   private checkChangesBrandP(changes: any): void {
@@ -670,7 +1063,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
       const value = /color/i.test(fieldName) ? changes[fieldName] : `var(--${changes[fieldName]})`;
 
       if (changes[fieldName]) {
-        document.getElementsByTagName('html')[0].style.setProperty(this.formPropertyP[fieldName], value);
+        document.getElementById('myPortal').style.setProperty(this.formPropertyP[fieldName], value);
       }
     });
   }
@@ -680,7 +1073,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
       const value = /color/i.test(fieldName) ? changes[fieldName] : `var(--${changes[fieldName]})`;
 
       if (changes[fieldName]) {
-        document.getElementsByTagName('html')[0].style.setProperty(this.formPropertyT[fieldName], value);
+        document.getElementById('myPortal').style.setProperty(this.formPropertyT[fieldName], value);
       }
     });
   }
@@ -690,7 +1083,16 @@ export class ThemeBuilderComponent implements AfterViewInit {
       const value = /color/i.test(fieldName) ? changes[fieldName] : `var(--${changes[fieldName]})`;
 
       if (changes[fieldName]) {
-        document.getElementsByTagName('html')[0].style.setProperty(this.formPropertyS[fieldName], value);
+        document.getElementById('myPortal').style.setProperty(this.formPropertyS[fieldName], value);
+        const colorBack = getComputedStyle(document.querySelector('po-page-default')).getPropertyValue(
+          '--color-secondary'
+        );
+        if (!this.changedColorButton) {
+          this.ratioButton = this.setRatioComponent(this.changedColorButton, colorBack, '#ffffff');
+        }
+        if (!this.changedColorPopup) {
+          this.ratioPopup = this.setRatioComponent(this.changedColorPopup, colorBack, '#ffffff');
+        }
       }
     });
   }
@@ -709,8 +1111,28 @@ export class ThemeBuilderComponent implements AfterViewInit {
 
         if (changes[fieldName]) {
           this.buttonP.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonP[fieldName], value);
-
+          this.buttonPDefault.nativeElement.style.setProperty(this.formPropertyDictButtonP[fieldName], value);
+          this.buttonPHover.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonP[fieldName],
+            value
+          );
+          this.buttonPFocus.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonP[fieldName],
+            value
+          );
+          this.buttonPPressed.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonP[fieldName],
+            value
+          );
+          this.buttonPDisabled.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonP[fieldName],
+            value
+          );
           this.resultButtonP['nativeElement'].innerHTML += `${this.formPropertyDictButtonP[fieldName]}: ${value};<br>`;
+          this.ratio = this.ratioButton = this.checkChangesContrast(changes, fieldName, this.ratioButton);
+          if (fieldName === 'color') {
+            this.changedColorButton = true;
+          }
         }
       });
 
@@ -734,7 +1156,26 @@ export class ThemeBuilderComponent implements AfterViewInit {
 
         if (changes[fieldName]) {
           this.buttonD.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonD[fieldName], value);
-
+          this.buttonDDefault.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonD[fieldName],
+            value
+          );
+          this.buttonDHover.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonD[fieldName],
+            value
+          );
+          this.buttonDFocus.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonD[fieldName],
+            value
+          );
+          this.buttonDPressed.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonD[fieldName],
+            value
+          );
+          this.buttonDDisabled.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonD[fieldName],
+            value
+          );
           this.resultButtonD['nativeElement'].innerHTML += `${this.formPropertyDictButtonD[fieldName]}: ${value};<br>`;
         }
       });
@@ -758,6 +1199,26 @@ export class ThemeBuilderComponent implements AfterViewInit {
         }
         if (changes[fieldName]) {
           this.buttonL.buttonElement.nativeElement.style.setProperty(this.formPropertyDictButtonL[fieldName], value);
+          this.buttonLDefault.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonL[fieldName],
+            value
+          );
+          this.buttonLHover.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonL[fieldName],
+            value
+          );
+          this.buttonLFocus.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonL[fieldName],
+            value
+          );
+          this.buttonLPressed.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonL[fieldName],
+            value
+          );
+          this.buttonLDisabled.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictButtonL[fieldName],
+            value
+          );
 
           this.resultButtonL['nativeElement'].innerHTML += `${this.formPropertyDictButtonL[fieldName]}: ${value};<br>`;
         }
@@ -769,6 +1230,24 @@ export class ThemeBuilderComponent implements AfterViewInit {
     }
   }
 
+  private checkChangesContrast(
+    changes: { [key: string]: string },
+    fieldName: string,
+    actualRatio: number,
+    background = 'color'
+  ) {
+    if (fieldName === background || fieldName === 'textColor') {
+      if (fieldName === 'textColor') {
+        this.colorText = changes[fieldName];
+      } else {
+        this.colorBack = changes[fieldName];
+      }
+
+      return this.calculateRatio(this.colorBack, this.colorText);
+    }
+    return actualRatio;
+  }
+
   private checkChangesSwitch(changes: { [key: string]: string }): void {
     if (!this.isEmpty(changes)) {
       this.resultSwitch['nativeElement'].innerHTML = 'po-switch {<br>';
@@ -778,6 +1257,18 @@ export class ThemeBuilderComponent implements AfterViewInit {
 
         if (changes[fieldName]) {
           this.switch.switchContainer.nativeElement.style.setProperty(this.formPropertyDictSwitch[fieldName], value);
+          this.switchDefault.switchContainer.nativeElement.style.setProperty(
+            this.formPropertyDictSwitch[fieldName],
+            value
+          );
+          this.switchChecked.switchContainer.nativeElement.style.setProperty(
+            this.formPropertyDictSwitch[fieldName],
+            value
+          );
+          this.switchUnchecked.switchContainer.nativeElement.style.setProperty(
+            this.formPropertyDictSwitch[fieldName],
+            value
+          );
 
           this.resultSwitch['nativeElement'].innerHTML += `${this.formPropertyDictSwitch[fieldName]}: ${value};<br>`;
         }
@@ -808,6 +1299,10 @@ export class ThemeBuilderComponent implements AfterViewInit {
       if (changes[fieldName]) {
         document.getElementById('myRadio').style.setProperty(this.formPropertyDictRadio[fieldName], value);
         document.getElementById('myRadio2').style.setProperty(this.formPropertyDictRadio[fieldName], value);
+        this.radioDefault.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], value);
+        this.radioDefault2.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], value);
+        this.radioHover.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], value);
+        this.radioHover2.nativeElement.style.setProperty(this.formPropertyDictRadio[fieldName], value);
         this.resultRadio['nativeElement'].innerHTML += `${this.formPropertyDictRadio[fieldName]}: ${value};<br>`;
       }
     });
@@ -829,10 +1324,17 @@ export class ThemeBuilderComponent implements AfterViewInit {
             this.formPropertyDictDisclaimer[fieldName],
             value
           );
+          this.disclaimerDefault.nativeElement.style.setProperty(this.formPropertyDictDisclaimer[fieldName], value);
+          this.disclaimerHover.disclaimerContainer.nativeElement.style.setProperty(
+            this.formPropertyDictDisclaimer[fieldName],
+            value
+          );
 
           this.resultDisclaimer[
             'nativeElement'
           ].innerHTML += `${this.formPropertyDictDisclaimer[fieldName]}: ${value};<br>`;
+
+          this.ratio = this.ratioDisclaimer = this.checkChangesContrast(changes, fieldName, this.ratioDisclaimer);
         }
       });
 
@@ -856,8 +1358,18 @@ export class ThemeBuilderComponent implements AfterViewInit {
 
         if (changes[fieldName]) {
           this.inputComponent.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], value);
+          this.inputHover.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], value);
+          this.inputDefault.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], value);
+          this.inputFocus.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], value);
+          this.inputDisabled.inp.nativeElement.style.setProperty(this.formPropertyDictInput[fieldName], value);
 
           this.resultInput['nativeElement'].innerHTML += `${this.formPropertyDictInput[fieldName]}: ${value};<br>`;
+          this.ratio = this.ratioInput = this.checkChangesContrast(
+            changes,
+            fieldName,
+            this.ratioInput,
+            'backgroundColor'
+          );
         }
       });
 
@@ -883,8 +1395,21 @@ export class ThemeBuilderComponent implements AfterViewInit {
             this.formPropertyDictSelect[fieldName],
             value
           );
+          this.selectDefault.nativeElement.style.setProperty(this.formPropertyDictSelect[fieldName], value);
+          this.selectHover.selectElement.nativeElement.style.setProperty(this.formPropertyDictSelect[fieldName], value);
+          this.selectFocus.selectElement.nativeElement.style.setProperty(this.formPropertyDictSelect[fieldName], value);
+          this.selectDisabled.selectElement.nativeElement.style.setProperty(
+            this.formPropertyDictSelect[fieldName],
+            value
+          );
 
           this.resultSelect['nativeElement'].innerHTML += `${this.formPropertyDictSelect[fieldName]}: ${value};<br>`;
+          this.ratio = this.ratioSelect = this.checkChangesContrast(
+            changes,
+            fieldName,
+            this.ratioSelect,
+            'colorBackground'
+          );
         }
       });
 
@@ -910,10 +1435,24 @@ export class ThemeBuilderComponent implements AfterViewInit {
             this.formPropertyDictTextarea[fieldName],
             value
           );
+          this.textareaDefault.nativeElement.style.setProperty(this.formPropertyDictTextarea[fieldName], value);
+          this.textareaHover.inputEl.nativeElement.style.setProperty(this.formPropertyDictTextarea[fieldName], value);
+          this.textareaFocus.inputEl.nativeElement.style.setProperty(this.formPropertyDictTextarea[fieldName], value);
+          this.textareaDisabled.inputEl.nativeElement.style.setProperty(
+            this.formPropertyDictTextarea[fieldName],
+            value
+          );
 
           this.resultTextarea[
             'nativeElement'
           ].innerHTML += `${this.formPropertyDictTextarea[fieldName]}: ${value};<br>`;
+
+          this.ratio = this.ratioTextarea = this.checkChangesContrast(
+            changes,
+            fieldName,
+            this.ratioTextarea,
+            'backgroundColor'
+          );
         }
       });
 
@@ -936,6 +1475,22 @@ export class ThemeBuilderComponent implements AfterViewInit {
         }
         if (changes[fieldName]) {
           this.dropdownComponent.dropdownRef.nativeElement.style.setProperty(
+            this.formPropertyDictDropdown[fieldName],
+            value
+          );
+          this.dropdownDefault.dropdownRef.nativeElement.style.setProperty(
+            this.formPropertyDictDropdown[fieldName],
+            value
+          );
+          this.dropdownHover.dropdownRef.nativeElement.style.setProperty(
+            this.formPropertyDictDropdown[fieldName],
+            value
+          );
+          this.dropdownFocus.dropdownRef.nativeElement.style.setProperty(
+            this.formPropertyDictDropdown[fieldName],
+            value
+          );
+          this.dropdownDisabled.dropdownRef.nativeElement.style.setProperty(
             this.formPropertyDictDropdown[fieldName],
             value
           );
@@ -968,10 +1523,28 @@ export class ThemeBuilderComponent implements AfterViewInit {
             this.formPropertyDictDatepicker[fieldName],
             value
           );
+          this.datepickerDefault.inputEl.nativeElement.style.setProperty(
+            this.formPropertyDictDatepicker[fieldName],
+            value
+          );
+          this.datepickerHover.inputEl.nativeElement.style.setProperty(
+            this.formPropertyDictDatepicker[fieldName],
+            value
+          );
+          this.datepickerDisabled.inputEl.nativeElement.style.setProperty(
+            this.formPropertyDictDatepicker[fieldName],
+            value
+          );
 
           this.resultDatepicker[
             'nativeElement'
           ].innerHTML += `${this.formPropertyDictDatepicker[fieldName]}: ${value};<br>`;
+          this.ratio = this.ratioDatepicker = this.checkChangesContrast(
+            changes,
+            fieldName,
+            this.ratioDatepicker,
+            'backgroundColor'
+          );
         }
       });
 
@@ -994,6 +1567,18 @@ export class ThemeBuilderComponent implements AfterViewInit {
         }
         if (changes[fieldName]) {
           this.datepickerComponent.iconDatepicker.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictDatepickerButton[fieldName],
+            value
+          );
+          this.datepickerDefault.iconDatepicker.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictDatepickerButton[fieldName],
+            value
+          );
+          this.datepickerHover.iconDatepicker.buttonElement.nativeElement.style.setProperty(
+            this.formPropertyDictDatepickerButton[fieldName],
+            value
+          );
+          this.datepickerDisabled.iconDatepicker.buttonElement.nativeElement.style.setProperty(
             this.formPropertyDictDatepickerButton[fieldName],
             value
           );
@@ -1027,6 +1612,7 @@ export class ThemeBuilderComponent implements AfterViewInit {
         }
         if (changes[fieldName]) {
           this.modalBuilder.nativeElement.style.setProperty(this.formPropertyDictModal[fieldName], value);
+          this.modalDefault.nativeElement.style.setProperty(this.formPropertyDictModal[fieldName], value);
 
           this.resultModal['nativeElement'].innerHTML += `${this.formPropertyDictModal[fieldName]}: ${value};<br>`;
         }
@@ -1060,13 +1646,16 @@ export class ThemeBuilderComponent implements AfterViewInit {
 
       if (changes[fieldName]) {
         document.getElementById('myLink').style.setProperty(this.formPropertyDictLink[fieldName], value);
+        this.linkDefault.nativeElement.style.setProperty(this.formPropertyDictLink[fieldName], value);
+        this.linkVisited.nativeElement.style.setProperty(this.formPropertyDictLink[fieldName], value);
+        this.linkUnvisited.nativeElement.style.setProperty(this.formPropertyDictLink[fieldName], value);
         this.resultLink['nativeElement'].innerHTML += `${this.formPropertyDictLink[fieldName]}: ${value};<br>`;
       }
     });
   }
 
   private checkChangesTooltip(changes: { [key: string]: string }): void {
-    const tooltipElement = this.renderer.selectRootElement('.po-tooltip', true);
+    const tooltipElement = document.querySelector('.po-tooltip');
     if (tooltipElement) {
       if (!this.isEmpty(changes)) {
         this.resultTooltip['nativeElement'].innerHTML = '.po-tooltip {<br>';
@@ -1079,11 +1668,17 @@ export class ThemeBuilderComponent implements AfterViewInit {
             value = /color/i.test(fieldName) ? changes[fieldName] : `var(--${changes[fieldName]})`;
           }
           if (changes[fieldName]) {
-            tooltipElement.style.setProperty(this.formPropertyDictTooltip[fieldName], value);
+            const tooltipDefault = this.tooltipDefault.buttonElement.nativeElement.nextElementSibling;
+            this.tooltip.buttonElement.nativeElement.nextElementSibling.style.setProperty(
+              this.formPropertyDictTooltip[fieldName],
+              value
+            );
+            tooltipDefault.style.setProperty(this.formPropertyDictTooltip[fieldName], value);
 
             this.resultTooltip[
               'nativeElement'
             ].innerHTML += `${this.formPropertyDictTooltip[fieldName]}: ${value};<br>`;
+            this.ratio = this.ratioTooltip = this.checkChangesContrast(changes, fieldName, this.ratioTooltip);
           }
         });
 
@@ -1096,6 +1691,8 @@ export class ThemeBuilderComponent implements AfterViewInit {
 
   private checkChangesPopup(changes: { [key: string]: string }): void {
     this.popupBuilder.open();
+    this.popupDefault?.open();
+    this.popupHover?.open();
 
     if (!this.isEmpty(changes)) {
       this.resultPopup['nativeElement'].innerHTML = 'po-popup po-item-list {<br>';
@@ -1112,8 +1709,17 @@ export class ThemeBuilderComponent implements AfterViewInit {
             this.formPropertyDictPopup[fieldName],
             value
           );
+          this.popupDefault.poListBoxRef.listboxItemList.nativeElement.children[0].children[0].style.setProperty(
+            this.formPropertyDictPopup[fieldName],
+            value
+          );
+          this.popupHover.poListBoxRef.listboxItemList.nativeElement.children[0].children[0].style.setProperty(
+            this.formPropertyDictPopup[fieldName],
+            value
+          );
 
           this.resultPopup['nativeElement'].innerHTML += `${this.formPropertyDictPopup[fieldName]}: ${value};<br>`;
+          this.ratio = this.ratioPopup = this.checkChangesContrast(changes, fieldName, this.ratioPopup);
         }
       });
 
@@ -1140,6 +1746,10 @@ export class ThemeBuilderComponent implements AfterViewInit {
       const value = /color/i.test(fieldName) ? changes[fieldName] : `var(--${changes[fieldName]})`;
 
       if (changes[fieldName]) {
+        this.checkboxDefault.nativeElement.style.setProperty(this.formPropertyDictCheckbox[fieldName], value);
+        this.checkboxChecked.nativeElement.style.setProperty(this.formPropertyDictCheckbox[fieldName], value);
+        this.checkboxUnchecked.nativeElement.style.setProperty(this.formPropertyDictCheckbox[fieldName], value);
+        this.checkboxHover.nativeElement.style.setProperty(this.formPropertyDictCheckbox[fieldName], value);
         document.getElementById('myCheckbox').style.setProperty(this.formPropertyDictCheckbox[fieldName], value);
         this.resultCheckbox['nativeElement'].innerHTML += `${this.formPropertyDictCheckbox[fieldName]}: ${value};<br>`;
       }
@@ -1148,6 +1758,8 @@ export class ThemeBuilderComponent implements AfterViewInit {
 
   private checkChangesPopupContainer(changes: { [key: string]: string }): void {
     this.popupBuilder.open();
+    this.popupDefault?.open();
+    this.popupHover?.open();
 
     if (!this.isEmpty(changes)) {
       this.resultPopupContainer['nativeElement'].innerHTML = 'po-popup po-listbox {<br>';
@@ -1164,10 +1776,27 @@ export class ThemeBuilderComponent implements AfterViewInit {
             this.formPropertyDictPopupContainer[fieldName],
             value
           );
+          this.popupDefault.listbox['nativeElement'].style.setProperty(
+            this.formPropertyDictPopupContainer[fieldName],
+            value
+          );
+          this.popupHover.listbox['nativeElement'].style.setProperty(
+            this.formPropertyDictPopupContainer[fieldName],
+            value
+          );
 
           this.resultPopupContainer[
             'nativeElement'
           ].innerHTML += `${this.formPropertyDictPopupContainer[fieldName]}: ${value};<br>`;
+          this.ratio = this.ratioPopup = this.checkChangesContrast(
+            changes,
+            fieldName,
+            this.ratioPopup,
+            'colorBackground'
+          );
+          if (fieldName === 'colorBackground') {
+            this.changedColorPopup = true;
+          }
         }
       });
 
@@ -1200,11 +1829,41 @@ export class ThemeBuilderComponent implements AfterViewInit {
     );
   }
 
+  private setColorsBackAndText(
+    component: Element,
+    ratioComponent: number,
+    tokenColor = '--background',
+    tokenText = '--text-color'
+  ) {
+    this.colorBack = getComputedStyle(component).getPropertyValue(tokenColor);
+    this.colorText = getComputedStyle(component).getPropertyValue(tokenText);
+    this.ratio = ratioComponent;
+  }
+
+  private setRatioComponent(initialComponent: boolean, colorBack: string, colorText?: string) {
+    if (!initialComponent) {
+      this.colorBack = colorBack;
+      this.colorText = colorText ? colorText : this.colorText;
+      return this.calculateRatio(this.colorBack, this.colorText);
+    }
+  }
+
+  private setRatioDefault() {
+    this.ratioButton = this.setRatioComponent(false, '#2c3739', '#ffffff');
+    this.ratioDisclaimer = this.setRatioComponent(false, '#f2eaf6', '#2c3739');
+    this.ratioDatepicker = this.ratioTextarea = this.ratioInput = this.ratioSelect = this.setRatioComponent(
+      false,
+      '#fbfbfb',
+      '#1d2426'
+    );
+    this.ratioTooltip = this.setRatioComponent(false, '#2c3739', '#ffffff');
+    this.ratioPopup = this.setRatioComponent(false, '#ffffff', '#753399');
+    this.cdr.detectChanges();
+  }
+
   private verifyIfAllNotVisibility() {
     return (
-      !this.botaoDefaultView ||
       !this.botaoPrimaryView ||
-      !this.botaoLinkView ||
       !this.switchView ||
       !this.radioView ||
       !this.disclaimerView ||
@@ -1217,32 +1876,26 @@ export class ThemeBuilderComponent implements AfterViewInit {
       !this.linkView ||
       !this.tooltipView ||
       !this.popupView ||
-      !this.checkboxView ||
-      !this.acordionView ||
-      !this.calendarView ||
-      !this.stepperView
+      !this.checkboxView
     );
   }
 
-  private verifyIfAllIsVisibility() {
+  verifyIfAllIsVisibility() {
     return (
-      (this.botaoDefaultView &&
-        this.botaoPrimaryView &&
-        this.botaoLinkView &&
-        this.switchView &&
-        this.radioView &&
-        this.disclaimerView &&
-        this.inputView &&
-        this.selectView &&
-        this.textareaView &&
-        this.datepickerView &&
-        this.linkView &&
-        this.tooltipView &&
-        this.dropdownView &&
-        this.popupView &&
-        this.checkboxView &&
-        this.modalView) ||
-      (this.linkView && this.tooltipView && this.acordionView && this.calendarView && this.stepperView)
+      this.botaoPrimaryView &&
+      this.switchView &&
+      this.radioView &&
+      this.disclaimerView &&
+      this.inputView &&
+      this.selectView &&
+      this.textareaView &&
+      this.dropdownView &&
+      this.datepickerView &&
+      this.modalView &&
+      this.linkView &&
+      this.tooltipView &&
+      this.popupView &&
+      this.checkboxView
     );
   }
 

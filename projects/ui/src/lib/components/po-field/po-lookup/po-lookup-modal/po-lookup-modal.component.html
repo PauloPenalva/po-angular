@@ -29,7 +29,6 @@
           tabindex="0"
           (click)="onAdvancedFilter()"
           (keydown.enter)="onAdvancedFilter()"
-          tabindex="0"
         >
           {{ literals.modalAdvancedSearch }}
         </span>
@@ -46,21 +45,25 @@
     >
     </po-disclaimer-group>
 
-    <div class="po-row po-lookup-container-table" [style.height.px]="containerHeight">
+    <div class="po-row po-lookup-container-table" [attr.data-multiple]="multiple">
       <po-table
         #poTable
         class="po-md-12"
         [p-selectable]="true"
         [p-hide-detail]="true"
         [p-single-select]="!multiple"
+        [p-hide-action-fixed-columns]="true"
         [p-sort]="true"
+        [p-hide-table-search]="true"
         [p-columns]="columns"
         [p-height]="tableHeight"
+        [p-hide-columns-manager]="hideColumnsManager"
         [p-items]="items"
         [p-literals]="tableLiterals"
         [p-loading]="isLoading"
         [p-show-more-disabled]="!hasNext"
         [p-infinite-scroll]="infiniteScroll"
+        [p-hide-batch-actions]="true"
         (p-selected)="onSelect($event)"
         (p-unselected)="onUnselect($event)"
         (p-all-selected)="onAllSelected($event)"

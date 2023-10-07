@@ -17,6 +17,7 @@
   <po-table
     [p-striped]="striped"
     [p-sort]="true"
+    [p-hide-table-search]="true"
     [p-actions]="tableActions"
     [p-actions-right]="actionRight"
     [p-selectable]="enableSelectionTable"
@@ -24,6 +25,8 @@
     [p-columns]="columns"
     [p-items]="items"
     [p-height]="height"
+    [p-hide-batch-actions]="true"
+    [p-hide-columns-manager]="hideColumnsManager"
     [p-infinite-scroll]="infiniteScroll"
     [p-infinite-scroll-distance]="infiniteScrollDistance"
     [p-hide-text-overflow]="hideOverflow"
@@ -33,6 +36,7 @@
     (p-change-visible-columns)="onChangeVisibleColumns($event)"
     (p-restore-column-manager)="onColumnRestoreManager($event)"
     (p-sort-by)="onSortBy($event)"
+    [p-draggable]="draggable"
   >
   </po-table>
 </po-page-dynamic-search>

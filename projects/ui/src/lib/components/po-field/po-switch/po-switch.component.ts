@@ -8,9 +8,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { InputBoolean } from '../../../decorators';
 
-import { uuid } from '../../../utils/util';
+import { convertToBoolean, uuid } from '../../../utils/util';
 
 import { PoFieldModel } from '../po-field.model';
 import { PoKeyCodeEnum } from './../../../enums/po-key-code.enum';
@@ -82,7 +81,9 @@ export class PoSwitchComponent extends PoFieldModel<any> {
   @ViewChild('switchContainer', { static: true }) switchContainer: ElementRef;
 
   id = `po-switch[${uuid()}]`;
-  value = false;
+
+  // Parâmetro interno, não documentar
+  @Input({ alias: 'p-value', transform: convertToBoolean }) value: boolean = false;
 
   private _labelOff: string = 'false';
   private _labelOn: string = 'true';
@@ -100,8 +101,7 @@ export class PoSwitchComponent extends PoFieldModel<any> {
    * > Por padrão será atribuído `false`.
    * @default `false`
    */
-  @Input('p-format-model')
-  @InputBoolean()
+  @Input({ alias: 'p-format-model', transform: convertToBoolean })
   set formatModel(format: boolean) {
     this._formatModel = format || false;
   }

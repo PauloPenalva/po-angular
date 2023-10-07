@@ -1,4 +1,4 @@
-import { EventEmitter, Input, OnInit, Output, Directive } from '@angular/core';
+import { Directive, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, Validator } from '@angular/forms';
 
 import {
@@ -8,17 +8,16 @@ import {
   convertToBoolean,
   formatYear,
   isTypeof,
+  replaceFormatSeparator,
   setYearFrom0To100,
-  validateDateRange,
-  replaceFormatSeparator
+  validateDateRange
 } from '../../../utils/util';
-import { dateFailed, requiredFailed } from './../validators';
-import { InputBoolean } from '../../../decorators';
 import { PoMask } from '../po-input/po-mask';
+import { dateFailed, requiredFailed } from './../validators';
 
-import { PoDatepickerIsoFormat } from './enums/po-datepicker-iso-format.enum';
-import { PoLanguageService } from '../../../services/po-language/po-language.service';
 import { poLocaleDefault } from '../../../services/po-language/po-language.constant';
+import { PoLanguageService } from '../../../services/po-language/po-language.service';
+import { PoDatepickerIsoFormat } from './enums/po-datepicker-iso-format.enum';
 
 const poDatepickerFormatDefault: string = 'dd/mm/yyyy';
 
@@ -77,7 +76,7 @@ export abstract class PoDatepickerBaseComponent implements ControlValueAccessor,
    *
    * @default `false`
    */
-  @Input('p-auto-focus') @InputBoolean() autoFocus: boolean = false;
+  @Input({ alias: 'p-auto-focus', transform: convertToBoolean }) autoFocus: boolean = false;
 
   /* Nome do componente datepicker. */
   @Input('name') name: string;
@@ -122,6 +121,7 @@ export abstract class PoDatepickerBaseComponent implements ControlValueAccessor,
    */
   @Output('p-change') onchange: EventEmitter<any> = new EventEmitter<any>();
 
+  offset: number;
   protected firstStart = true;
   protected hour: string = 'T00:00:00-00:00';
   protected isExtendedISO: boolean = false;
@@ -368,6 +368,8 @@ export abstract class PoDatepickerBaseComponent implements ControlValueAccessor,
   }
 
   ngOnInit() {
+    this.offset = new Date().getTimezoneOffset();
+    this.formatTimezoneAndHour(this.offset);
     // Classe de máscara
     this.objMask = this.buildMask(
       replaceFormatSeparator(this.format, this.languageService.getDateSeparator(this.locale))
@@ -493,6 +495,16 @@ export abstract class PoDatepickerBaseComponent implements ControlValueAccessor,
     mask = mask.replace(/YYYY/g, '9999');
 
     return new PoMask(mask, true);
+  }
+
+  formatTimezoneAndHour(offset: number) {
+    const offsetAbsolute = Math.abs(offset);
+    const timezone =
+      (offset < 0 ? '+' : '-') +
+      ('00' + Math.floor(offsetAbsolute / 60)).slice(-2) +
+      ':' +
+      ('00' + (offsetAbsolute % 60)).slice(-2);
+    this.hour = 'T00:00:00' + timezone;
   }
 
   abstract writeValue(value: any): void;
